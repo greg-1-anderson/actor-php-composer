@@ -7,8 +7,8 @@
 [![license](https://img.shields.io/github/license/dependencies-io/actor-php-composer.svg)](https://github.com/dependencies-io/actor-php-composer/blob/master/LICENSE)
 
 A [dependencies.io](https://www.dependencies.io)
-[actor](https://www.dependencies.io/docs/actors/)
-uses `composer require $name:$version` to update composer dependencies.
+[actor](https://www.dependencies.io/docs/actors/) that uses
+`composer require $name:$version` to update composer dependencies.
 
 ## Usage
 
