@@ -65,7 +65,7 @@ foreach ($dependencies as $dependency) {
     $options = array(
       'http' => array(
         'method'  => 'POST',
-        'content' => json_encode( $data ),
+        'content' => json_encode( $pr_data ),
         'header'=>  "Content-Type: application/json\r\n" .
                     "Accept: application/json\r\n" .
                     "Authorization: token $github_api_token\r\n" .
