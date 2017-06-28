@@ -81,7 +81,7 @@ foreach ($dependencies as $dependency) {
         if ($result === FALSE) {
             throw new Exception('Failed to create pull request.');
         }
-        $response = json_decode( $result );
+        $response = json_decode($result, true);
 
         // if the user added labels, assignees, or milestone
         // have to do that in a separate patch to the issue endpoint
