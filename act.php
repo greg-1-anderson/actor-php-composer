@@ -68,8 +68,8 @@ foreach ($dependencies as $dependency) {
         'content' => json_encode( $data ),
         'header'=>  "Content-Type: application/json\r\n" .
                     "Accept: application/json\r\n" .
-                    "Authorization: token $github_api_token" .
-                    "User-Agent: dependencies.io actor-php-composer"
+                    "Authorization: token $github_api_token\r\n" .
+                    "User-Agent: dependencies.io actor-php-composer\r\n"
         )
     );
 
@@ -103,8 +103,8 @@ foreach ($dependencies as $dependency) {
                 'content' => json_encode( $issue_fields ),
                 'header'=>  "Content-Type: application/json\r\n" .
                             "Accept: application/json\r\n" .
-                            "Authorization: token $github_api_token" .
-                            "User-Agent: dependencies.io actor-php-composer"
+                            "Authorization: token $github_api_token\r\n" .
+                            "User-Agent: dependencies.io actor-php-composer\r\n"
                 )
             );
             $context  = stream_context_create( $options );
