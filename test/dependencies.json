@@ -2,7 +2,7 @@
     "dependencies": [
         {
             "name": "monolog/monolog",
-            "source": "composer",
+            "source": "packagist",
             "path": "/",
             "installed": {
                 "version": "1.0.2"
