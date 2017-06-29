@@ -117,5 +117,5 @@ foreach ($dependencies as $dependency) {
 
     // tell dependencies.io that this one got updated successfully
     $schema_output = json_encode(array('dependencies' => array($dependency)));
-    echo("BEGIN_DEPENDENCIES_SCHEMA_OUTPUT>$schema_output<END_DEPENDENCIES_SCHEMA_OUTPUT");
+    echo("BEGIN_DEPENDENCIES_SCHEMA_OUTPUT>$schema_output<END_DEPENDENCIES_SCHEMA_OUTPUT\n");
 }
