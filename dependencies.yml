@@ -1,0 +1,7 @@
+collectors:
+
+- type: python-pip
+  path: requirements_test.txt
+  actors:
+  - type: python-pip
+    versions: "Y.Y.Y"
