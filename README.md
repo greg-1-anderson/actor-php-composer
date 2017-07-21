@@ -12,7 +12,7 @@ A [dependencies.io](https://www.dependencies.io)
 
 ## Usage
 
-### .dependencies.yml
+### dependencies.yml
 
 ```yaml
 collectors:
