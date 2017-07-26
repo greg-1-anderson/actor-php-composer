@@ -38,7 +38,7 @@ foreach ($dependencies as $dependency) {
     runCommand("git checkout -b $branch_name");
 
     # do the install
-    runCommand("composer require $name:$version_to_install");
+    runCommand("composer require --ignore-platform-reqs --no-scripts $name:$version_to_install");
 
     runCommand("git add composer.json composer.lock");
     $message = "Update $name from $installed_version to $version_to_install";
