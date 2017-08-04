@@ -9,7 +9,10 @@ cases:
   tests:
     - |
         git checkout monolog/monolog-1.23.0-#0.0.0 && \
-        diff -x '.git' -x 'vendor' ${CWD}/test/repo_final/ ./
+        diff -x '.git' -x 'vendor' ${CWD}/test/repo_final_monolog/ ./
+    - |
+        git checkout ramsey/uuid-3.6.1-#0.0.0 && \
+        diff -x '.git' -x 'vendor' ${CWD}/test/repo_final_uuid/ ./
   user_config:
     settings:
       pr_labels:

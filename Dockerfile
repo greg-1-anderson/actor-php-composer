@@ -19,9 +19,8 @@ USER app
 RUN git config --global user.email "bot@dependencies.io"
 RUN git config --global user.name "Dependencies.io Bot"
 
-ADD entrypoint.sh /usr/src/actor
-ADD act.php /usr/src/actor
+ADD entrypoint.php /usr/src/actor
 
 WORKDIR /repo
 
-ENTRYPOINT ["/usr/src/actor/entrypoint.sh"]
+ENTRYPOINT ["php", "/usr/src/actor/entrypoint.php"]

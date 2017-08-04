@@ -1,5 +1,17 @@
 <?php
 
+function path_join($base, $path) {
+    return rtrim($base, '/') . '/' . ltrim($path, '/');
+}
+
+function runCommand($cmd) {
+    exec($cmd, $output, $return);
+    if ($return) {
+        throw new Exception("Exception running: $cmd\n\n$output");
+    }
+    return $output;
+}
+
 $actor_id = getenv('ACTOR_ID');
 $git_sha = getenv('GIT_SHA');
 $base_branch = getenv('GIT_BRANCH');
@@ -18,13 +30,10 @@ $pr_milestone = $pr_milestone ? (int) $pr_milestone : null;
 $dependencies_schema = json_decode(getenv('DEPENDENCIES'), true);
 $dependencies = $dependencies_schema['dependencies'];
 
-function runCommand($cmd) {
-    exec($cmd, $output, $return);
-    if ($return) {
-        throw new Exception("Exception running: $cmd\n\n$output");
-    }
-    return $output;
-}
+$composer_json = json_decode(file_get_contents(path_join(path_join('/repo', $argv[1]), 'composer.json')), true);
+$composer_require = array_key_exists('require', $composer_json) ? $composer_json['require'] : array();
+$composer_require_dev = array_key_exists('require-dev', $composer_json) ? $composer_json['require-dev'] : array();
+
 
 foreach ($dependencies as $dependency) {
     $highest_available = $dependency['available'][0];
@@ -37,8 +46,13 @@ foreach ($dependencies as $dependency) {
     runCommand("git checkout $git_sha");
     runCommand("git checkout -b $branch_name");
 
-    # do the install
-    runCommand("composer require --ignore-platform-reqs --no-scripts $name:$version_to_install");
+    if (array_key_exists($name, $composer_require)) {
+        runCommand("composer require --ignore-platform-reqs --no-scripts $name:$version_to_install");
+    } else if (array_key_exists($name, $composer_require_dev)) {
+        runCommand("composer require --dev --ignore-platform-reqs --no-scripts $name:$version_to_install");
+    } else {
+        throw new Exception("Didn't find $name in composer.json require or require-dev.");
+    }
 
     runCommand("git add composer.json composer.lock");
     $message = "Update $name from $installed_version to $version_to_install";

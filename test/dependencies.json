@@ -18,6 +18,19 @@
                     "version": "1.22.0"
                 }
             ]
+        },
+        {
+            "name": "ramsey/uuid",
+            "source": "packagist",
+            "path": "/",
+            "installed": {
+                "version": "3.6.0"
+            },
+            "available": [
+                {
+                    "version": "3.6.1"
+                }
+            ]
         }
     ]
 }
