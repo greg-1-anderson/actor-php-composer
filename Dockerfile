@@ -1,6 +1,6 @@
 FROM composer:1.4
 
-RUN apk --no-cache add git
+RUN apk --no-cache add git wget
 
 # add a non-root user and give them ownership
 RUN adduser -D -u 9000 app && \
@@ -12,6 +12,14 @@ RUN adduser -D -u 9000 app && \
     chown -R app:app /usr/src/actor && \
     # composer cache
     chown -R app:app /composer/cache
+
+# add the pullrequest utility to easily create pull requests on different git hosts
+WORKDIR /usr/src/actor
+ENV PULLREQUEST_VERSION=0.2.1
+RUN wget https://github.com/dependencies-io/pullrequest/releases/download/${PULLREQUEST_VERSION}/pullrequest_${PULLREQUEST_VERSION}_linux_amd64.tar.gz && \
+    mkdir pullrequest && \
+    tar -zxvf pullrequest_${PULLREQUEST_VERSION}_linux_amd64.tar.gz -C pullrequest && \
+    ln -s /usr/src/actor/pullrequest/pullrequest /usr/local/bin/pullrequest
 
 # run everything from here on as non-root
 USER app
