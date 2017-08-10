@@ -1,4 +1,4 @@
-FROM composer:1.4
+FROM composer:1.4.3
 
 RUN apk --no-cache add git wget
 
@@ -9,9 +9,7 @@ RUN adduser -D -u 9000 app && \
     chown -R app:app /repo && \
     # actor code
     mkdir /usr/src/actor && \
-    chown -R app:app /usr/src/actor && \
-    # composer cache
-    chown -R app:app /composer/cache
+    chown -R app:app /usr/src/actor
 
 # add the pullrequest utility to easily create pull requests on different git hosts
 WORKDIR /usr/src/actor
