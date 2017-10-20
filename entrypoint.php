@@ -63,8 +63,8 @@ foreach ($dependencies as $dependency) {
     }
 
     runCommand("git add $composer_json_path");
-    $message = "Update $name from $installed_version to $version_to_install";
-    runCommand("git commit -m '$commit_message_prefix$message'");
+    $message = "$commit_message_prefixUpdate $name from $installed_version to $version_to_install";
+    runCommand("git commit -m '$message'");
 
     if (!$testing) {
         runCommand("git push --set-upstream origin $branch_name");
