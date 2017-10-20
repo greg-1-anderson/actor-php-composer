@@ -5,6 +5,7 @@ function path_join($base, $path) {
 }
 
 function runCommand($cmd) {
+    echo "Exec: $cmd\n";
     exec($cmd, $output, $return);
     if ($return) {
         var_dump($output);
@@ -16,6 +17,7 @@ function runCommand($cmd) {
 $actor_id = getenv('ACTOR_ID');
 $git_sha = getenv('GIT_SHA');
 $testing = getenv('DEPENDENCIES_ENV') === 'test';
+$commit_message_prefix = getenv('SETTING_COMMIT_MESSAGE_PREFIX');
 
 $dependencies_schema = json_decode(getenv('DEPENDENCIES'), true);
 $dependencies = $dependencies_schema['dependencies'];
@@ -62,7 +64,7 @@ foreach ($dependencies as $dependency) {
 
     runCommand("git add $composer_json_path");
     $message = "Update $name from $installed_version to $version_to_install";
-    runCommand("git commit -m '$message'");
+    runCommand("git commit -m '$commit_message_prefix$message'");
 
     if (!$testing) {
         runCommand("git push --set-upstream origin $branch_name");

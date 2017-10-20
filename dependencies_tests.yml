@@ -47,5 +47,6 @@ cases:
         diff -x '.git' -x 'vendor' ${CWD}/tests/no_lockfile/repo_final_uuid/ ./
   user_config:
     settings:
+      commit_message_prefix: "deps: "
       pr_labels:
       - testing

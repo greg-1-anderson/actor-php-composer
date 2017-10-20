@@ -21,6 +21,9 @@ collectors:
   - type: php-composer
     versions: "L.Y.Y"
     settings:  # all settings are optional
+      # an optional prefix to add to all commit messages, be sure to add a space at the end if you want one
+      commit_message_prefix: "chore: "
+
       # github options
       github_labels:  # list of label names
       - bug
