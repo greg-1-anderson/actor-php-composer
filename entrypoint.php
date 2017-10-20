@@ -20,12 +20,20 @@ $testing = getenv('DEPENDENCIES_ENV') === 'test';
 $dependencies_schema = json_decode(getenv('DEPENDENCIES'), true);
 $dependencies = $dependencies_schema['dependencies'];
 
-$composer_json = json_decode(file_get_contents(path_join(path_join('/repo', $argv[1]), 'composer.json')), true);
-$composer_require = array_key_exists('require', $composer_json) ? $composer_json['require'] : array();
-$composer_require_dev = array_key_exists('require-dev', $composer_json) ? $composer_json['require-dev'] : array();
-
-
 foreach ($dependencies as $dependency) {
+    $composer_dir = path_join('/repo', $dependency['path']);
+    $composer_json_path = path_join($composer_dir, 'composer.json');
+    if (!file_exists($composer_json_path)) {
+        throw new Exception("$composer_json_path does not exist! A composer.json file is required.");
+    }
+    $composer_json = json_decode(file_get_contents($composer_json_path), true);
+    $composer_require = array_key_exists('require', $composer_json) ? $composer_json['require'] : array();
+    $composer_require_dev = array_key_exists('require-dev', $composer_json) ? $composer_json['require-dev'] : array();
+
+    // if they didn't have a composer.lock to start with, then we won't commit one
+    $composer_lock_path = path_join($composer_dir, 'composer.lock');
+    $composer_lock_existed = file_exists($composer_lock_path);
+
     $highest_available = $dependency['available'][0];
     $name = $dependency['name'];
     $installed_version = $dependency['installed']['version'];
@@ -36,15 +44,23 @@ foreach ($dependencies as $dependency) {
     runCommand("git checkout $git_sha");
     runCommand("git checkout -b $branch_name");
 
+    runCommand("cd $composer_dir && composer install --ignore-platform-reqs --no-scripts");
+
     if (array_key_exists($name, $composer_require)) {
-        runCommand("composer require --ignore-platform-reqs --no-scripts $name:$version_to_install");
+        runCommand("cd $composer_dir && composer require --ignore-platform-reqs --no-scripts $name:$version_to_install");
     } else if (array_key_exists($name, $composer_require_dev)) {
-        runCommand("composer require --dev --ignore-platform-reqs --no-scripts $name:$version_to_install");
+        runCommand("cd $composer_dir && composer require --dev --ignore-platform-reqs --no-scripts $name:$version_to_install");
     } else {
-        throw new Exception("Didn't find $name in composer.json require or require-dev.");
+        throw new Exception("Didn't find $name in $composer_json_path require or require-dev.");
     }
 
-    runCommand("git add composer.json composer.lock");
+    if ($composer_lock_existed) {
+        runCommand("git add $composer_lock_path");
+    } else {
+        runCommand("rm $composer_lock_path");
+    }
+
+    runCommand("git add $composer_json_path");
     $message = "Update $name from $installed_version to $version_to_install";
     runCommand("git commit -m '$message'");
 
