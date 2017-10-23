@@ -52,6 +52,11 @@ foreach ($dependencies as $dependency) {
         runCommand("cd $composer_dir && composer require --ignore-platform-reqs --no-scripts $name:$version_to_install");
     } else if (array_key_exists($name, $composer_require_dev)) {
         runCommand("cd $composer_dir && composer require --dev --ignore-platform-reqs --no-scripts $name:$version_to_install");
+    } else if ($composer_lock_existed) {
+        // Update indirect dependency in composer.lock
+        // Add the dependency directly to composer.json and updates composer.lock, then revert composer.json and correct the composer.lock hash
+        // Workaround for https://github.com/composer/composer/issues/3387
+        runCommand("cd $composer_dir && composer require --ignore-platform-reqs --no-scripts $name:$version_to_install && git checkout -- $composer_json_path && composer update --lock");
     } else {
         throw new Exception("Didn't find $name in $composer_json_path require or require-dev.");
     }
