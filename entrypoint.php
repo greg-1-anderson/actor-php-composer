@@ -1,5 +1,10 @@
 <?php
 
+$github_token = getenv('GITHUB_API_TOKEN');
+if ($github_token) {
+    shell_exec("composer config -g http-basic.github.com x-access-token $github_token");
+}
+
 function path_join($base, $path) {
     return rtrim($base, '/') . '/' . ltrim($path, '/');
 }
