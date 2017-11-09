@@ -52,7 +52,7 @@ foreach ($dependencies as $dependency) {
     runCommand("git checkout $git_sha");
     runCommand("git checkout -b $branch_name");
 
-    runCommand("cd $composer_dir && composer install --ignore-platform-reqs --no-scripts");
+    runCommand("cd $composer_dir && composer install --ignore-platform-reqs --no-scripts --no-autoloader --no-progress");
 
     if (array_key_exists($name, $composer_require)) {
         runCommand("cd $composer_dir && composer require --ignore-platform-reqs --no-scripts $name:$version_to_install");
