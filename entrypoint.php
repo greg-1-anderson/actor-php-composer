@@ -2,6 +2,7 @@
 
 $github_token = getenv('GITHUB_API_TOKEN');
 if ($github_token) {
+    shell_exec("echo -e \"machine github.com\n  login x-access-token\n  password $github_token\" >> ~/.netrc");
     shell_exec("composer config -g http-basic.github.com x-access-token $github_token");
 }
 
