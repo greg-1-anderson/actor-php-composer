@@ -81,18 +81,10 @@ foreach ($dependencies as $dependency) {
         runCommand("git push --set-upstream origin $branch_name");
     }
 
-    $pr_body = "$name has been updated to $version_to_install by dependencies.io.";
-    foreach ($dependency['available'] as $available) {
-        $version = $available['version'];
-        $content = $available['content'] ?? '_No content found._';
-        $pr_body .= "\n\n## $version\n\n$content";
-    }
+    $schema_output = json_encode(array('dependencies' => array($dependency)));
 
-    if (!$testing) {
-        runCommand("pullrequest --branch " . escapeshellarg($branch_name) . " --title " . escapeshellarg($message) . " --body " . escapeshellarg($pr_body));
-    }
+    runCommand("pullrequest --branch " . escapeshellarg($branch_name) . " --title-from-schema --body-from-schema --dependencies-schema " . escapeshellarg($schema_output));
 
     // tell dependencies.io that this one got updated successfully
-    $schema_output = json_encode(array('dependencies' => array($dependency)));
     echo("BEGIN_DEPENDENCIES_SCHEMA_OUTPUT>$schema_output<END_DEPENDENCIES_SCHEMA_OUTPUT\n");
 }
